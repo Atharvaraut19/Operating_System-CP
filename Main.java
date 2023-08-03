@@ -2,17 +2,17 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
-        OS ubuntu = new OS("Input.txt","output.txt");
+        OS ubuntu = new OS("input_Phase1.txt", "output.txt");
         ubuntu.LOAD();
     }
 }
 
-public class OS {
+class OS {
 
-    char [][]M = new char[100][4];
-    char []buffer = new char[40];
-    char []R = new char[4];
-    char []IR = new char[4];
+    char[][] M = new char[100][4];
+    char[] buffer = new char[40];
+    char[] R = new char[4];
+    char[] IR = new char[4];
     int IC;
     int T;
     int C;
@@ -33,6 +33,7 @@ public class OS {
             this.input = new FileReader(file);
             this.fread = new BufferedReader(input);
             this.output = new FileWriter(output);
+            this.fwrite = new BufferedWriter(this.output);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,43 +43,40 @@ public class OS {
         int flag = 0;
         String line;
         try {
-            while((line = fread.readLine()) != null) {
+            while ((line = fread.readLine()) != null) {
                 buffer = line.toCharArray();
-                if(buffer[0] == '$' && buffer[1] == 'A' && buffer == 'M' && buffer == 'J') {
+                if (buffer[0] == '$' && buffer[1] == 'A' && buffer[2] == 'M' && buffer[3] == 'J') {
                     System.out.println("Program card detected.");
-                    //init();
+                    // init();
                     continue;
-                }
-                else if(buffer[0] == '$' && buffer[1] == 'D' && buffer == 'T' && buffer == 'A') {
+                } else if (buffer[0] == '$' && buffer[1] == 'D' && buffer[2] == 'T' && buffer[3] == 'A') {
                     System.out.println("Data card detected.");
-                    //execute();
+                    // execute();
                     flag = 2;
                     continue;
-                }
-                else if(buffer[0] == '$' && buffer[1] == 'E' && buffer == 'N' && buffer == 'D') {
+                } else if (buffer[0] == '$' && buffer[1] == 'E' && buffer[2] == 'N' && buffer[3] == 'D') {
                     System.out.println("End card detected.");
-                    output.write("\n\n\n");
-                    //print_memory();
+                    fwrite.write("\n\n\n"); // Use BufferedWriter for writing
+                    // print_memory();
                     continue;
                 }
-                if(m == 100) {
-                    //abort;
-                    System.out.println("Abort due to exceed memory usage");
+                if (m == 100) {
+                    // abort;
+                    System.out.println("Abort due to exceeded memory usage");
                 }
                 System.out.println("Your program starts here");
-                for(int i = 0; i < line.length();) {
+                for (int i = 0; i < line.length();) {
                     M[m][i % 4] = buffer[i];
                     i++;
-                    if(i % 4 == 0) {
+                    if (i % 4 == 0) {
                         m++;
                     }
                 }
             }
-            output.close();
-        }
-        catch(IOException e) {
+            fwrite.close(); // Close the output writer after writing
+            
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
